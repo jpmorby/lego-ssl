@@ -3,10 +3,11 @@
 ./genSAN.sh -d domains.txt -p pdns 
 
 ## Options
--m mode ( run | renew )
--p provider (default pdns)
--h hook (script to run upon successful completion)
--d doains.txt (list of domains)
+ ----- | -----
+-m | mode ( run | renew )
+-p | provider (default pdns)
+-h | hook (script to run upon successful completion)
+-d | doains.txt (list of domains)
 
 ## domains.txt
 File containing a list of domains, 1 per line to add to the SAN certificate
