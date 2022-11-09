@@ -1,58 +1,97 @@
 #!/bin/bash
 
+######
+## Script by Jon Morby <jon@redmail.com>
+## 2022 - Version 0.01
+##
+
 # Actions
 # =======
-# $1 - run | renew
-# $2 - hook
-#
+# -m mode (run | renew) - default renew
+# -h hook
+# -d domains.txt 
+# -p Provider (see https://go-acme.github.io/lego/dns/ )
+
+PATH=/usr/bin:/usr/local/bin:/snap/bin:/usr/local/sbin:${PATH}
+
+# SUPPORTED PROVIDER 
+# https://go-acme.github.io/lego/dns/
 
 # env variables
 # DEBUG
 
+# DEFAULT OPTIONS
+MODE=renew
 PROVIDER=pdns
-DOMAINS=domains.txt
+DOMAIN_LIST=domains.txt
 
-function showUsage {
+#########################
+
+function showUsage () {
 	echo "Request SAN certificates from LetsEncrypt using LEGO in Docker"
 	echo "Script by Jon Morby <jon@redmail.com>"
 	echo
-	echo "$0 mode hook-script"
+	echo "$0 [ -m mode ] [ -h hook-script ] [ -p Provider ] [ -d domains.txt ] [ -k rsa2048 | rsa4096 | rsa8192 | ec256 | ec384 (default: ec256) ] [ -? ]"
 	echo
 	echo "	mode = run | renew"
 	echo "	hook = script (optional)"
+	echo "	domains.txt (default)"
+	echo "	Provider (default pdns)"
+	echo "	-? this help"
 	echo
-	echo "Reads a file 'domains.txt' for the list of domains for the SAN certificate"
+	echo "Reads a file ${DOMAIN_LIST} for the list of domains for the SAN certificate"
 
 	exit 0
 }
 
-if [ -z ${1} ];
-then
-	MODE=run
-else
-	MODE=renew
+while getopts "m:h:d:p:k:?" o; do
+	case "${o}" in
+		d) DOMAIN_LIST=${OPTARG}
+			;;
+
+		h) HOOK=${OPTARG}
+			;;
+
+		m) MODE=${OPTARG}
+			;;
+
+		p) PROVIDER=${OPTARG}
+			;;
+
+		k) KEY=${OPTARG}
+			;;
+
+		*) echo showUsage
+			;;
+	esac
+done
+
+
+if [[ ${KEY} != "" ]];
+then 
+	KEYTYPE_OPT="--key-type ${KEY}"
 fi
 
-if [[ ${1} == "-h" ]];
+if [[ ${MODE} == "renew" ]];
 then
-	showUsage;
-fi
-
-if [ "X${2}" != "X" ];
-then
-	HOOK="--renew-hook=${2}"
+	if [[ ${HOOK} != "" ]]; then
+		HOOK_OPT="--renew-hook=${HOOK}"
+	fi
 fi
 
 
-if [ ${DEBUG} ];
+if [[ ${DEBUG} == 1 ]];
 then
 	echo "Mode: ${MODE}"
-	echo "Hook: ${HOOK}"
+	echo "Hook: ${HOOK_OPT}"
+	echo "Domain List: ${DOMAIN_LIST}"
+	echo "Provider: ${PROVIDER}"
+	echo "Key Type: ${KEYTYPE_OPT}"
 	exit 0
 fi
 
 DOMAINS=$(
-for dom in `cat domains.txt`
+for dom in `cat ${DOMAIN_LIST}`
 do
         echo "-d $dom "
 done
@@ -64,8 +103,9 @@ sudo	docker run \
 	goacme/lego \
 	${DOMAINS} \
 	-a -m="jon@redmail.com" \
+	${KEYTYPE_OPT} \
 	--dns="${PROVIDER}" \
 	--path /etc/ssl \
-	--pem ${MODE} ${HOOK}
+	--pem ${MODE} ${HOOK_OPT}
 
 # --renew-hook="./zimbra.sh"
