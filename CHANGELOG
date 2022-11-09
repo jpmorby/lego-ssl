@@ -1,0 +1,4 @@
+9th November 2022
+Initial Version 0.01
+
+Basic script conversion, now uses Docker and by default puts the output in /etc/ssl on the host
