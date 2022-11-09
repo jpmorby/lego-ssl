@@ -1,0 +1,12 @@
+fido.net
+morby.org
+bink.wales
+jfdi.studio
+redmail.com
+glide.email
+*.fido.net
+*.redmail.com
+*.jfdi.studio
+*.bink.wales
+*.glide.email
+*.morby.org

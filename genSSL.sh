@@ -61,7 +61,7 @@ while getopts "m:h:d:p:k:?" o; do
 		k) KEY=${OPTARG}
 			;;
 
-		*) echo showUsage
+		*) showUsage
 			;;
 	esac
 done
