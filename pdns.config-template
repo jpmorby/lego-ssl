@@ -1,0 +1,4 @@
+# PDNS API settings
+#
+PDNS_API_KEY=<API KEY>
+PDNS_API_URL=<API URL>
