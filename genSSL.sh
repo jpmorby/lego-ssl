@@ -104,7 +104,7 @@ do
 done
 )
 
-sudo	docker run \
+docker run \
 	--env-file ${PROVIDER}.config \
 	--volume ${HOME}:/etc/ssl \
 	goacme/lego \
