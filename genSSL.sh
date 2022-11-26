@@ -113,6 +113,10 @@ docker run \
 	${KEYTYPE_OPT} \
 	--dns="${PROVIDER}" \
 	--path /etc/ssl \
+	--dns.resolvers 1.1.1.1:53 \
+	--dns.resolvers 8.8.8.8:53 \
+	--dns.resolvers [2606:4700:4700::64]:53 \
+	--dns.resolvers [2606:4700:4700::6400]:53 \
 	--pem ${MODE} ${HOOK_OPT}
 
 # --renew-hook="./zimbra.sh"
