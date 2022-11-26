@@ -20,12 +20,14 @@ PATH=/usr/bin:/usr/local/bin:/snap/bin:/usr/local/sbin:${PATH}
 
 # env variables
 # DEBUG
+# LEGO="goacme/lego:v4.9.0"
+LEGO="goacme/lego:latest"
 
 # DEFAULT OPTIONS
 MODE=renew
 PROVIDER=pdns
 DOMAIN_LIST=domains.txt
-HOME=/etc/ssl
+OUTPUT_DIR=/etc/ssl
 EMAIL=""
 
 #########################
@@ -66,7 +68,12 @@ while getopts "m:h:d:p:k:o:e:?" o; do
 		k) KEY=${OPTARG}
 			;;
 
-		o) HOME=${OPTARG}
+		o) OUTPUT_DIR=${OPTARG}
+			if [[ ! -d ${OUTPUT_DIR} ]];
+			then
+				echo "Error: Output directory: ${OUTPUT_DIR} doesn't exist.  Please create or check your path"
+				exit 1;
+			fi
 			;;
 
 		e) EMAIL=${OPTARG}
@@ -96,7 +103,7 @@ then
 	echo "Mode: ${MODE}"
 	echo "Email: ${EMAIL}"
 	echo "Hook: ${HOOK_OPT}"
-	echo "Output Directory: ${HOME}"
+	echo "Output Directory: ${OUTPUT_DIR}"
 	echo "Domain List: ${DOMAIN_LIST}"
 	echo "Provider: ${PROVIDER}"
 	echo "Key Type: ${KEYTYPE_OPT}"
@@ -112,13 +119,13 @@ done
 
 docker run \
 	--env-file ${PROVIDER}.config \
-	--volume /etc/ssl:${HOME}:rw \
-	goacme/lego \
+	--volume ${OUTPUT_DIR}:/etc/ssl/lego:rw \
+	${LEGO} \
 	${DOMAINS} \
 	-a -m=${EMAIL} \
 	${KEYTYPE_OPT} \
 	--dns="${PROVIDER}" \
-	--path /etc/ssl \
+	--path /etc/ssl/lego \
 	--dns.resolvers 1.1.1.1:53 \
 	--dns.resolvers 8.8.8.8:53 \
 	--dns.resolvers [2606:4700:4700::64]:53 \
