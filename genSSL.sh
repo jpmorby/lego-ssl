@@ -38,7 +38,7 @@ function showUsage () {
 	echo "	mode = run | renew"
 	echo "	hook = script (optional)"
 	echo "	domains.txt (default)"
-	echo "  output-directory (default /etc/ssl)"
+	echo "	output-directory (default /etc/ssl)"
 	echo "	Provider (default pdns)"
 	echo "	-? this help"
 	echo
@@ -47,7 +47,7 @@ function showUsage () {
 	exit 0
 }
 
-while getopts "m:h:d:p:k:?" o; do
+while getopts "m:h:d:p:k:o:?" o; do
 	case "${o}" in
 		d) DOMAIN_LIST=${OPTARG}
 			;;
