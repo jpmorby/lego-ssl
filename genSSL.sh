@@ -26,6 +26,7 @@ MODE=renew
 PROVIDER=pdns
 DOMAIN_LIST=domains.txt
 HOME=/etc/ssl
+EMAIL=""
 
 #########################
 
@@ -33,10 +34,11 @@ function showUsage () {
 	echo "Request SAN certificates from LetsEncrypt using LEGO in Docker"
 	echo "Script by Jon Morby <jon@redmail.com>"
 	echo
-	echo "$0 [ -m mode ] [ -h hook-script ] [ -p Provider ] [ -d domains.txt ] [ -o output-directory ] [ -k rsa2048 | rsa4096 | rsa8192 | ec256 | ec384 (default: ec256) ] [ -? ]"
+	echo "$0 [ -m mode ] [ -e email ] [ -h hook-script ] [ -p Provider ] [ -d domains.txt ] [ -o output-directory ] [ -k rsa2048 | rsa4096 | rsa8192 | ec256 | ec384 (default: ec256) ] [ -? ]"
 	echo
 	echo "	mode = run | renew"
 	echo "	hook = script (optional)"
+	echo "	email = your email"
 	echo "	domains.txt (default)"
 	echo "	output-directory (default /etc/ssl)"
 	echo "	Provider (default pdns)"
@@ -47,7 +49,7 @@ function showUsage () {
 	exit 0
 }
 
-while getopts "m:h:d:p:k:o:?" o; do
+while getopts "m:h:d:p:k:o:e:?" o; do
 	case "${o}" in
 		d) DOMAIN_LIST=${OPTARG}
 			;;
@@ -65,6 +67,9 @@ while getopts "m:h:d:p:k:o:?" o; do
 			;;
 
 		o) HOME=${OPTARG}
+			;;
+
+		e) EMAIL=${OPTARG}
 			;;
 
 		*) showUsage
@@ -89,6 +94,7 @@ fi
 if [[ ${DEBUG} == 1 ]];
 then
 	echo "Mode: ${MODE}"
+	echo "Email: ${EMAIL}"
 	echo "Hook: ${HOOK_OPT}"
 	echo "Output Directory: ${HOME}"
 	echo "Domain List: ${DOMAIN_LIST}"
@@ -109,7 +115,7 @@ docker run \
 	--volume ${HOME}:/etc/ssl \
 	goacme/lego \
 	${DOMAINS} \
-	-a -m="jon@redmail.com" \
+	-a -m=${EMAIL} \
 	${KEYTYPE_OPT} \
 	--dns="${PROVIDER}" \
 	--path /etc/ssl \
