@@ -118,6 +118,7 @@ done
 )
 
 docker run \
+	--rm \
 	--env-file ${PROVIDER}.config \
 	--volume ${OUTPUT_DIR}:/etc/ssl/lego:rw \
 	${LEGO} \

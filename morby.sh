@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./genSSL.sh -m run -d morby.txt -k ec384 -e jon@redmail.com -o /etc/ssl
+./genSSL.sh -m run -d morby.txt -k ec384 -e jon@redmail.com -o `pwd`//ssl
