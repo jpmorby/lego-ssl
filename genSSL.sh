@@ -112,7 +112,7 @@ done
 
 docker run \
 	--env-file ${PROVIDER}.config \
-	--volume ${HOME}:/etc/ssl \
+	--volume /etc/ssl:${HOME}:rw \
 	goacme/lego \
 	${DOMAINS} \
 	-a -m=${EMAIL} \
