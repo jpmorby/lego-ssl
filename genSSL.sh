@@ -9,6 +9,7 @@
 # =======
 # -m mode (run | renew) - default renew
 # -h hook
+# -o output directory
 # -d domains.txt 
 # -p Provider (see https://go-acme.github.io/lego/dns/ )
 
@@ -24,6 +25,7 @@ PATH=/usr/bin:/usr/local/bin:/snap/bin:/usr/local/sbin:${PATH}
 MODE=renew
 PROVIDER=pdns
 DOMAIN_LIST=domains.txt
+HOME=/etc/ssl
 
 #########################
 
@@ -31,11 +33,12 @@ function showUsage () {
 	echo "Request SAN certificates from LetsEncrypt using LEGO in Docker"
 	echo "Script by Jon Morby <jon@redmail.com>"
 	echo
-	echo "$0 [ -m mode ] [ -h hook-script ] [ -p Provider ] [ -d domains.txt ] [ -k rsa2048 | rsa4096 | rsa8192 | ec256 | ec384 (default: ec256) ] [ -? ]"
+	echo "$0 [ -m mode ] [ -h hook-script ] [ -p Provider ] [ -d domains.txt ] [ -o output-directory ] [ -k rsa2048 | rsa4096 | rsa8192 | ec256 | ec384 (default: ec256) ] [ -? ]"
 	echo
 	echo "	mode = run | renew"
 	echo "	hook = script (optional)"
 	echo "	domains.txt (default)"
+	echo "  output-directory (default /etc/ssl)"
 	echo "	Provider (default pdns)"
 	echo "	-? this help"
 	echo
@@ -61,6 +64,9 @@ while getopts "m:h:d:p:k:?" o; do
 		k) KEY=${OPTARG}
 			;;
 
+		o) HOME=${OPTARG}
+			;;
+
 		*) showUsage
 			;;
 	esac
@@ -84,6 +90,7 @@ if [[ ${DEBUG} == 1 ]];
 then
 	echo "Mode: ${MODE}"
 	echo "Hook: ${HOOK_OPT}"
+	echo "Output Directory: ${HOME}"
 	echo "Domain List: ${DOMAIN_LIST}"
 	echo "Provider: ${PROVIDER}"
 	echo "Key Type: ${KEYTYPE_OPT}"
@@ -99,7 +106,7 @@ done
 
 sudo	docker run \
 	--env-file ${PROVIDER}.config \
-	--volume /etc/ssl:/etc/ssl \
+	--volume ${HOME}:/etc/ssl \
 	goacme/lego \
 	${DOMAINS} \
 	-a -m="jon@redmail.com" \
