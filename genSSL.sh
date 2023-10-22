@@ -9,9 +9,11 @@
 # =======
 # -m mode (run | renew) - default renew
 # -h hook
+# -e email
 # -o output directory
 # -d domains.txt 
 # -p Provider (see https://go-acme.github.io/lego/dns/ )
+# -k rsa2048 | rsa4096 | rsa8192 | ec256 | ec384 (default: ec256)
 
 PATH=/usr/bin:/usr/local/bin:/snap/bin:/usr/local/sbin:${PATH}
 

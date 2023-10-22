@@ -1,6 +1,6 @@
 # Lego SSL Script using Docker Lego
 
-./genSAN.sh -d domains.txt -p pdns 
+./genSSL.sh -d domains.txt -p pdns 
 
 ## Options
 Option | Description
@@ -9,6 +9,11 @@ Option | Description
 -p | provider (default pdns)
 -h | hook (script to run upon successful completion)
 -d | doains.txt (list of domains)
+-e | email
+-o | output directory
+-d | domains.txt 
+-p | Provider (see https://go-acme.github.io/lego/dns/ )
+-k | rsa2048 | rsa4096 | rsa8192 | ec256 | ec384 (default: ec256)
 
 
 ## domains.txt
