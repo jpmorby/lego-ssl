@@ -2,4 +2,4 @@
 
 . ./morby.sh
 . ./home.sh
-. ./dist.sh
+. ./push.sh
