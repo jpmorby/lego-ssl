@@ -18,7 +18,7 @@
   hosts: web
   tasks:
   - ansible.builtin.service:
-     name: httpd
+     name: apache2
      state: reloaded
   ignore_errors: true
 
