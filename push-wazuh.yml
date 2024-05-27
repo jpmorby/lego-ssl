@@ -1,0 +1,16 @@
+#!/usr/bin/env ansible-playbook -i hosts
+---
+- name: update wazuh
+  hosts:
+    - wazuh
+  tasks:
+    - copy:
+        src: ssl/certificates/redmail.com.pem
+        dest: "{{ item }}"
+        mode: 0644
+        owner: root
+      with_items:
+        - "/etc/wazuh-dashboard/certs/"
+    - ansible.builtin.service:
+        name: wazuh-dashboard
+        state: restarted

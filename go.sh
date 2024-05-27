@@ -1,5 +1,5 @@
 #!/bin/bash
 
-./morby.sh
-./home.sh
-./dist.sh
+. ./morby.sh
+. ./home.sh
+. ./dist.sh

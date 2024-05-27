@@ -1,0 +1,37 @@
+
+[lb_org:vars]
+ansible_user=root
+
+[lb_org]
+lb-1.server.morby.net 
+lb-2.server.morby.net 
+
+[home_lb]
+lb.morby.org ansible_user=root
+
+[wazuh]
+opus.redmail.com ansible_user=root
+
+[web]
+www-1.redmail.com ansible_user=root
+
+[lsws]
+web-1.server.morby.net ansible_user=root
+
+[stats]
+stats.redmail.com ansible_user=root
+
+[dev_web]
+dev.redmail.com ansible_user=root
+
+[proxmox]
+pve-2.morby.org ansible_user=root ansible_ssh_host=10.200.200.252
+
+[zabbix]
+chas.server.morby.net ansible_user=root
+
+[devops]
+devops.eng.morby.net ansible_user=root
+
+[docker]
+d1.morby.org ansible_user=root ansible_ssh_host=10.200.200.50

@@ -36,3 +36,5 @@ morby.net
 morby.org
 seaswabjon.com
 svpamelac.com
+morby.uk
+*.morby.uk

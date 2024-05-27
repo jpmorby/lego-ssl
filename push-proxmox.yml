@@ -1,0 +1,15 @@
+#!/usr/bin/env ansible-playbook -i hosts
+---
+- name: update proxmox servers
+  hosts:
+    - proxmox
+  tasks:
+    - copy:
+        src: "ssl/certificates/{{ item.0 }}"
+        dest: "/etc/pve/nodes/pve-2/{{ item.1 }}"
+      with_together:
+        - ["morby.org.pem", "morby.org.key"]
+        - ["pveproxy-ssl.pem", "pveproxy-ssl.key"]
+    - ansible.builtin.service:
+        name: pveproxy
+        state: restarted

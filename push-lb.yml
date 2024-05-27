@@ -1,0 +1,31 @@
+#!/usr/bin/env ansible-playbook -i hosts
+---
+- name: update load balancers - redmail.com
+  hosts:
+    - lb_org
+  tasks:
+    - copy:
+        src: "{{ item.0 }}"
+        dest: "{{ item.1 }}"
+        mode: 0644
+        owner: root
+      with_together:
+        - [ "ssl/certificates/redmail.com.pem", "ssl/certificates/redmail.com.pem", "ssl/certificates/morby.org.pem" ]
+        - [ "/etc/loadbalancer.org/certs/redmail/redmail.pem", "/etc/loadbalancer.org/certs/_.morby.org/", "/etc/loadbalancer.org/certs/_.morby.org/" ]
+    - ansible.builtin.service:
+        name: haproxy
+        state: reloaded
+- name: update home loadbalancer - morby.org
+  hosts:
+    - home_lb
+  tasks:
+    - copy:
+        src: ssl/certificates/morby.org.pem
+        dest: "{{ item }}"
+      with_items:
+        - "/etc/loadbalancer.org/certs/_.morby.net/_.morby.net.pem"
+        - "/etc/loadbalancer.org/certs/_.morby.org/_.morby.org.pem"
+        - "/etc/loadbalancer.org/certs/morbysan/morbysan.pem"
+    - ansible.builtin.service:
+        name: haproxy
+        state: reloaded

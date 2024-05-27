@@ -1,0 +1,32 @@
+#!/usr/bin/env ansible-playbook -i hosts
+---
+- name: update /etc/ssl/certificates on all hosts
+  hosts: all
+  tasks:
+    - copy:
+        src: "ssl/certificates/{{ item }}"
+        dest: "/etc/ssl/certificates/"
+      with_items:
+        - "morby.org.pem"
+        - "morby.org.key"
+        - "morby.org.issuer.crt"
+        - "redmail.com.pem"
+        - "redmail.com.key"
+        - "redmail.com.issuer.crt"
+
+- name: restart apache
+  hosts: web
+  tasks:
+  - ansible.builtin.service:
+     name: httpd
+     state: reloaded
+  ignore_errors: true
+
+- name: restart lightspeed
+  hosts: lsws
+  tasks:
+  - ansible.builtin.service:
+      name: lsws
+      state: reloaded
+  ignore_errors: true
+

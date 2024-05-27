@@ -1,6 +1,8 @@
 morby.org
 morby.net
+morby.uk
 *.morby.org
+*.morby.uk
 *.morby.net
 *.dev.morby.net
 *.eng.morby.net
