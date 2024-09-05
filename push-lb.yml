@@ -15,6 +15,10 @@
     - ansible.builtin.service:
         name: haproxy
         state: reloaded
+    - ansible.builtin.service:
+        name: apache
+        state: reloaded
+        
 - name: update home loadbalancer - morby.org
   hosts:
     - home_lb
@@ -29,3 +33,21 @@
     - ansible.builtin.service:
         name: haproxy
         state: reloaded
+    - ansible.builtin.service:
+        name: apache
+        state: reloaded
+        
+- name: update home haproxy - morby.org
+  hosts:
+    - lb_haproxy
+  tasks:
+    - copy:
+        src: "{{ item.0 }}"
+        dest: "{{ item.1 }}"
+      with_together:
+        - [ "ssl/certificates/redmail.com.pem", "ssl/certificates/morby.org.pem" ]
+        - [ "/etc/ssl/certificates", "/etc/ssl/certificates" ]
+    - ansible.builtin.service:
+        name: haproxy
+        state: reloaded
+        

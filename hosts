@@ -6,6 +6,9 @@ ansible_user=root
 lb-1.server.morby.net 
 lb-2.server.morby.net 
 
+[lb_haproxy]
+lb-3.server.morby.net ansible_user=root
+
 [home_lb]
 lb.morby.org ansible_user=root
 
@@ -35,3 +38,7 @@ devops.eng.morby.net ansible_user=root
 
 [docker]
 d1.morby.org ansible_user=root ansible_ssh_host=10.200.200.50
+
+[sabnzbd]
+bin.morby.org ansible_user=root
+
