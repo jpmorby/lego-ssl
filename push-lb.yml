@@ -10,15 +10,22 @@
         mode: 0644
         owner: root
       with_together:
-        - [ "ssl/certificates/redmail.com.pem", "ssl/certificates/redmail.com.pem", "ssl/certificates/morby.org.pem" ]
-        - [ "/etc/loadbalancer.org/certs/redmail/redmail.pem", "/etc/loadbalancer.org/certs/_.morby.org/", "/etc/loadbalancer.org/certs/_.morby.org/" ]
+        - [
+            "ssl/certificates/redmail.com.pem",
+            "ssl/certificates/redmail.com.pem",
+            "ssl/certificates/morby.org.pem",
+          ]
+        - [
+            "/etc/loadbalancer.org/certs/redmail/redmail.pem",
+            "/etc/loadbalancer.org/certs/_.morby.org/",
+            "/etc/loadbalancer.org/certs/_.morby.org/",
+          ]
     - ansible.builtin.service:
         name: haproxy
         state: reloaded
-    - ansible.builtin.service:
-        name: apache
-        state: reloaded
-        
+    - ansible.builtin.shell:
+        cmd: /usr/local/sbin/apachectl -f /etc/httpd/webui.conf -k  graceful
+
 - name: update home loadbalancer - morby.org
   hosts:
     - home_lb
@@ -36,7 +43,7 @@
     - ansible.builtin.service:
         name: apache
         state: reloaded
-        
+
 - name: update home haproxy - morby.org
   hosts:
     - lb_haproxy
@@ -45,9 +52,8 @@
         src: "{{ item.0 }}"
         dest: "{{ item.1 }}"
       with_together:
-        - [ "ssl/certificates/redmail.com.pem", "ssl/certificates/morby.org.pem" ]
-        - [ "/etc/ssl/certificates", "/etc/ssl/certificates" ]
+        - ["ssl/certificates/redmail.com.pem", "ssl/certificates/morby.org.pem"]
+        - ["/etc/ssl/certificates", "/etc/ssl/certificates"]
     - ansible.builtin.service:
         name: haproxy
         state: reloaded
-        
